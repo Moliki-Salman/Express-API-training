@@ -1,8 +1,8 @@
-// const express = require("express");
+const express = require("express");
+const app = express();
 const mysql = require("mysql2");
-// const app = express();
-
 // NOTE: YOU CAN CONNECT WITH mySql WITHOUT RUNNING Express and you will be able to display the result on your console.;
+
 
 //this is used to declare the sources  of the datatbase connection
 /*createPOOL a method that enable you to create a connection to your database.

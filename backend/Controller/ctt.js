@@ -1,6 +1,6 @@
 const fs = require("fs");
 const data = require("../model/datasource");
-const { mysql, pool, s_users, insertUser_query } = require("../model/getpool");
+const { pool, s_users, insertUser_query } = require("../model/getpool");
 
 const homefun = (req, res) => {
   res.send("Home Page");
@@ -77,17 +77,16 @@ const showUsers = (req, res) => {
 
 const createUser = async (req, res) => {
   const userDetails = {
-    // cus_id: req.body.cus_id,
-    first_name: req.body.first_name,
-    last_name: req.body.last_name,
+    fullname: req.body.fullname,
+    username: req.body.username,
+    contact: req.body.contact,
     email: req.body.email,
-    phone_no: req.body.phone_no,
   };
 
-  await insertUsers(req, res, userDetails);
+  await insertUsers(res, userDetails);
 };
 
-const insertUsers = async (req, res, userDetails) => {
+const insertUsers = async (res, userDetails) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.log("error in connection");
@@ -98,11 +97,10 @@ const insertUsers = async (req, res, userDetails) => {
     connection.query(
       insertUser_query,
       [
-        // userDetails.cus_id,
-        userDetails.first_name,
-        userDetails.last_name,
+        userDetails.fullname,
+        userDetails.username,
+        userDetails.contact,
         userDetails.email,
-        userDetails.phone_no,
       ],
       (err, result) => {
         connection.release();

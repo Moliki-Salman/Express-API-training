@@ -7,10 +7,7 @@ const routerManager = express.Router(); //express has a methods that helps in ro
 
 routerManager.get("/", homefun);
 routerManager.get("/list", list);
-routerManager.post("/createUser", createUser);
-// routerManager.post("register", registerUser)
+routerManager.post("/register", createUser);
 routerManager.get("/showUsers", showUsers);
 
-module.exports = {
-  routerManager,
-}; // exported routerManageras an object, meaning that it has to be imported using destructing as an object
+module.exports = { routerManager }; // exported routerManageras an object, meaning that it has to be imported using destructing as an object

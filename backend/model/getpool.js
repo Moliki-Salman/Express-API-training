@@ -5,15 +5,14 @@ const pool = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "1234",
-  database: "Practice",
+  database: "user_table",
 });
 
-const s_users = "select * from customers";
-const insertUser_query = "insert into customers(first_name, last_name, email, phone_no) values(?,?,?,?)";
-
-module.exports= {
-mysql,
-pool,
-s_users,
-insertUser_query
-}
+const s_users = "select * from userData";
+const insertUser_query =
+  "insert into userData(fullname, username, contact, email) values(?,?,?,?)";
+module.exports = {
+  pool,
+  s_users,
+  insertUser_query,
+};

@@ -14,6 +14,7 @@ const fetchUser = () => {
       displayUsers(res);
     })
     .catch(function (err) {
+// displays any connection error to the database, code was gotten from sweetalert afterbuting the sweetalert link in the html file.
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -54,11 +55,6 @@ function validate() {
       contact.length <= 0 ||
       email.length <= 0
     ) {
-      //  Swal.fire({
-      //    icon: "error",
-      //    title: "Oops...",
-      //    text: "Something went wrong!",
-      //  });
       reject("invalid data");
     } else {
       resolve({ fullname, username, contact, email }); //pass in the object because they are already values
@@ -88,6 +84,9 @@ function addUser(userData) {
       console.log(err);
     });
 }
+// to implement response after inputing data on the form, butwe need the response in the console
+
+
 
 // const sendData = () => {
 //   const url = `${baseUrl}register`;

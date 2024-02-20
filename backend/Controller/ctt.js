@@ -42,39 +42,6 @@ const showUsers = (req, res) => {
   });
 };
 
-// const registerUser = async (req, res) => {
-//   const userDetails = {
-//     // cus_id: req.body.cus_id,
-//     first_name: req.body.first_name,
-//     last_name: req.body.last_name,
-//     email: req.body.email,
-//     phone_no: req.body.phone_no,
-//   };
-//   pool.getConnection((err, connection) => {
-//     if (err) {
-//       return "connection Error";
-//     }
-
-//     connection.query(
-//       insertUser_query,
-//       [
-//         // userDetails.cus_id,
-//         userDetails.first_name,
-//         userDetails.last_name,
-//         userDetails.email,
-//         userDetails.phone_no,
-//       ],
-//       (err, result) => {
-//         connection.release();
-//         if (err) {
-//           return "Error detected";
-//         }
-//         res.send(result);
-//       }
-//     );
-//   });
-// };
-
 const createUser = async (req, res) => {
   const userDetails = {
     fullname: req.body.fullname,
@@ -82,34 +49,84 @@ const createUser = async (req, res) => {
     contact: req.body.contact,
     email: req.body.email,
   };
-
-  await insertUsers(res, userDetails);
+  try {
+    const rest = await addUsers(userDetails);
+    res.status(200).json(rest);
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
 };
 
-const insertUsers = async (res, userDetails) => {
-  pool.getConnection((err, connection) => {
-    if (err) {
-      console.log("error in connection");
-      console.log(err);
-      return;
-    }
-
-    connection.query(
-      insertUser_query,
-      [
-        userDetails.fullname,
-        userDetails.username,
-        userDetails.contact,
-        userDetails.email,
-      ],
-      (err, result) => {
-        connection.release();
-        if (err) throw err;
-        res.send(result);
+function getConnection() {
+  //promise to check for connection, promise helps to return result
+  return new Promise((resolve, reject) => {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(connection);
       }
-    );
+    });
   });
+}
+
+//  query function willonly runbased on the connection
+function runQuary(connection, sql_query, values) {
+  return new Promise((resolve, reject) => {
+    // the .query method always require a callback function
+    connection.query(sql_query, values, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+}
+
+const addUsers = async (data) => {
+  const connection = await getConnection(); //to execute the getConnection() first b4 anything
+  try {
+    const result = await runQuary(connection, insertUser_query, [
+      data.fullname,
+      data.username,
+      data.contact,
+      data.email,
+    ]);
+    console.log(result);
+    return result;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
 };
+
+//HERE WE HAVE BOTH OUR getConnection AND connection.query in a single function and it workd perfectly by given the response in the browswer console
+// const insertUsers = async (res, userDetails) => {
+//   pool.getConnection((err, connection) => {
+//     if (err) {
+//       console.log("error in connection");
+//       console.log(err);
+//       return;
+//     }
+
+//     connection.query(
+//       insertUser_query,
+//       [
+//         userDetails.fullname,
+//         userDetails.username,
+//         userDetails.contact,
+//         userDetails.email,
+//       ],
+//       (err, result) => {
+//         connection.release();
+//         if (err) throw err;
+//         res.send(result);
+//       }
+//     );
+//   });
+// };
 
 module.exports = {
   homefun,

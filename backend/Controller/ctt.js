@@ -50,11 +50,22 @@ const createUser = async (req, res) => {
     email: req.body.email,
   };
   try {
-    const rest = await addUsers(userDetails);
-    res.status(200).json(rest);
+    if (req.body.username.length <= 4) {
+      res.status(200).json({ message: "invalid username" });
+    } else {
+      const rest = await addUsers(userDetails);
+
+      if (rest.errno == 1062) {
+        //1062 is an sql error no that indicates duplicate data entry.
+        res.status(200).json({ message: "duplicate" });
+      } else {
+        res.status(200).json({ message: "successful" });
+      }
+    }
   } catch (err) {
-    console.log(err);
-    return err;
+    res.status(200).json(rest);
+    // console.log(err);
+    // return err;
   }
 };
 

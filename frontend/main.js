@@ -5,16 +5,16 @@ const fetchUser = () => {
   // the fetch(url) has a url parameter
   //the fetch().then().then(), it takes two .then(), the second .then() is used to display the records/data
   fetch(url)
-    .then(function (data) {
-      console.log(data);
-      return data.json(); //u have to call return data here to the second .then() for it to work because any data you return here will be proceed by the second.then()
+    .then(function (r) {
+      console.log(r);
+      return r.json(); //u have to call return data here to the second .then() for it to work because any data you return here will be proceed by the second.then()
     })
     .then(function (res) {
       console.log(res);
       displayUsers(res);
     })
     .catch(function (err) {
-// displays any connection error to the database, code was gotten from sweetalert afterbuting the sweetalert link in the html file.
+      // displays any connection error to the database, code was gotten from sweetalert afterbuting the sweetalert link in the html file.
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -78,15 +78,25 @@ function addUser(userData) {
     .post(`${baseUrl}register`, userData)
     .then(function (response) {
       fetchUser();
-      console.log(response.data);
+      if (response.data.message == "invalid" || response.data.message == "dupliicate") {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: response.data.message,
+        });
+      } else {
+        Swal.fire({
+          icon: "Successful",
+          title: "Data saved succesfully",
+          text: response.data.message,
+        });
+      }
     })
     .catch((err) => {
       console.log(err);
     });
 }
 // to implement response after inputing data on the form, butwe need the response in the console
-
-
 
 // const sendData = () => {
 //   const url = `${baseUrl}register`;
